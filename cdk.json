@@ -27,6 +27,8 @@
     "@aws-cdk/core:target-partitions": [
       "aws",
       "aws-cn"
-    ]
+    ],
+    "vpc_name": "gitops_pipeline",
+    "cluster_name_list": ["gitops_eks", "app_eks"]
   }
 }

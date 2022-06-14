@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import os
 import aws_cdk as cdk
-# from create_vpc.create_vpc_stack import CreateVpcStack
 from stacks.vpc_stack import VpcStack
 
 
@@ -12,7 +11,8 @@ env = cdk.Environment(
     region=os.environ.get("CDK_DEPLOY_REGION", os.environ["CDK_DEFAULT_REGION"]),
 )
 
-vpc_name = 'gitops_pipeline'
+# vpc_name = 'gitops_pipeline'
+vpc_name = app.node.try_get_context('gitops_pipeline')
 VpcStack(
     app,
     "CreateVpcStack",

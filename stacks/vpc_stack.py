@@ -13,7 +13,6 @@ class VpcStack(Stack):
             construct_id: str,
             vpc_name: str,
             vpc_cidr: str,
-            env: aws_cdk.Environment,
             **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
@@ -57,20 +56,21 @@ class VpcStack(Stack):
         self.tag_subnet_for_eks_cluster(vpc)
 
     def tag_subnet_for_eks_cluster(self, vpc):
+        # ---------------- Subnet Tagging -----------------------
         # VPCに複数のEKS Clusterがある場合、Tag:"kubernetes.io/cluster/cluster-name": "shared"が必要
         # PrivateSubnetにはTag "kubernetes.io/role/internal-elb": '1'
         # PublicSubnetには"kubernetes.io/role/elb": '1'
         # https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/network_reqs.html
         # https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/alb-ingress.html
 
-        print('-----------subnet tagging-----------------------')
-
-        eks_cluster_name = ['gitops_eks', 'app_eks']
+        # eks_cluster_name = ['gitops_eks', 'app_eks']
+        cluster_name_list = self.node.try_get_context('cluster_name_list')
 
         self.tag_all_subnets(vpc.public_subnets, 'kubernetes.io/role/elb', '1')
         self.tag_all_subnets(vpc.private_subnets, 'kubernetes.io/role/internal-elb', '1')
 
-        for cluster_name in eks_cluster_name:
+        # for cluster_name in ['gitops_eks', 'app_eks']:
+        for cluster_name in cluster_name_list:
             self.tag_all_subnets(vpc.public_subnets,
                                  f'kubernetes.io/cluster/{cluster_name}', 'shared')
             self.tag_all_subnets(vpc.private_subnets,
