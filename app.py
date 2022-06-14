@@ -12,10 +12,10 @@ env = cdk.Environment(
 )
 
 # vpc_name = 'gitops_pipeline'
-vpc_name = app.node.try_get_context('gitops_pipeline')
+vpc_name = app.node.try_get_context('vpc_name')
 VpcStack(
     app,
-    "CreateVpcStack",
+    "EksVpcStack",
     vpc_name=vpc_name,
     vpc_cidr='10.11.0.0/16',
     env=env)
