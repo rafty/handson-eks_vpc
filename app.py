@@ -3,7 +3,6 @@ import os
 import aws_cdk as cdk
 from stacks.vpc_stack import VpcStack
 
-
 app = cdk.App()
 
 env = cdk.Environment(
